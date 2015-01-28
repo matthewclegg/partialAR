@@ -1,0 +1,22 @@
+useDynLib(partialAR)
+#exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)
+import("zoo","parallel","ggplot2","grid","MASS","tseries","data.table","FKF","urca","plot3D")
+
+export(estimate.par,
+  pvmr.par,
+  kalman.gain.par,
+  fit.par,
+  statehistory.par,
+  loglik.par,
+  likelihood_ratio.par,
+  rpar,
+  sample.likelihood_ratio.par,
+  test.par,
+  which.hypothesis.partest)
+  
+S3method(print, par.fit)
+S3method(plot, par.fit)
+S3method(as.data.frame, par.fit)
+S3method(print, partest)
+

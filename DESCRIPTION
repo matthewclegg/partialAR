@@ -1,0 +1,12 @@
+Package: partialAR
+Type: Package
+Title: Partial autoregression
+Version: 1.0.2
+Date: 2015-01-12
+Author: Matthew Clegg
+Maintainer: Matthew Clegg <matthewcleggphd@gmail.com>
+Description: Fits time series models which consist of a sum of a permanent and a transient component.  
+License: GPL-2 | GPL-3
+Imports: Rcpp (>= 0.11.2), zoo, parallel, ggplot2, grid, MASS, tseries,
+        data.table, FKF, urca, plot3D
+LinkingTo: Rcpp
