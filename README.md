@@ -3,12 +3,15 @@ R package for fitting the partially autoregressive model
 
 The partially autoregressive model is a time series model that is given
 by the following specification:
+
+```
    X[t] = M[t] + R[t]
    M[t] = rho * M[t-1] + epsilon_M[t]
    R[t] = R[t-1] + epsilon_R[t]
    epsilon_M[t] ~ NID(0, sigma_M^2)
    epsilon_R[t] ~ NID(0, sigma_R^2)
-   
+'''
+
 Thus, the series X[t] is a sum of a random walk R[t],  representing the 
 permanent component, and a mean-reverting series M[t], representing the 
 transient component. 
