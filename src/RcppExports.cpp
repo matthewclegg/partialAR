@@ -5,6 +5,23 @@
 
 using namespace Rcpp;
 
+// lagged_variance_c
+double lagged_variance_c(NumericVector X, int k, int n);
+RcppExport SEXP partialAR_lagged_variance_c(SEXP XSEXP, SEXP kSEXP, SEXP nSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< NumericVector >::type X(XSEXP );
+        Rcpp::traits::input_parameter< int >::type k(kSEXP );
+        Rcpp::traits::input_parameter< int >::type n(nSEXP );
+        double __result = lagged_variance_c(X, k, n);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
 // estimate_rho_par_c
 double estimate_rho_par_c(NumericVector X);
 RcppExport SEXP partialAR_estimate_rho_par_c(SEXP XSEXP) {

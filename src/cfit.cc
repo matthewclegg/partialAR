@@ -20,6 +20,24 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
+double lagged_variance_c (NumericVector X, int k, int n) {
+    // Computes the variance of (1-B^k)X[(k+1)..n]
+    
+    if (k < 1 || k >= n-2 || n < 4 || n+k > X.size()) return(NA_REAL);
+    
+    double s = 0.0;
+    double ssq = 0.0;
+    for (int i = 0; i < n; i++) {
+        double dx = X[i+k] - X[i];
+        s += dx;  // This is a telescoping sum, but taking advantage of this
+                  // fact is not going to improve execution time noticeably
+        ssq += dx*dx;
+    }
+    double v = (ssq - s*s/n)/(n-1);
+    return (v);
+}
+
+// [[Rcpp::export]]
 double estimate_rho_par_c (NumericVector X) {
 //	Computes an estimate of mean reversion for the mean-reverting
 //	portion of a PAR process.  If v[k] = Var[X[t+k]-X[t]], then
@@ -28,20 +46,10 @@ double estimate_rho_par_c (NumericVector X) {
     
     int n = X.size();
     if (n < 5) return(NA_REAL);
-    IntegerVector I = seq_len(n-3)-1;
     
-    NumericVector X0 = X[I];
-    NumericVector X1 = X[I+1];
-    NumericVector X2 = X[I+2];
-    NumericVector X3 = X[I+3];
-    
-    NumericVector X1X0 = X1 - X0;
-    NumericVector X2X0 = X2 - X0;
-    NumericVector X3X0 = X3 - X0;
-    
-    double xv1 = var(X1X0);
-    double xv2 = var(X2X0);
-    double xv3 = var(X3X0);
+    double xv1 = lagged_variance_c(X, 1, n-3);
+    double xv2 = lagged_variance_c(X, 2, n-3);
+    double xv3 = lagged_variance_c(X, 3, n-3);
     
     double rho = -(xv1 - 2 * xv2 + xv3) / (2 * xv1 - xv2);
     if (rho < -0.99) rho = -1.0;
@@ -62,20 +70,9 @@ NumericVector estimate_par_c (NumericVector X, double rho_max = 1.0) {
     int n = X.size();
     if (n < 5) return(NumericVector::create(NA_REAL, NA_REAL, NA_REAL));
     
-    IntegerVector I = seq_len(n-3)-1;
-    
-    NumericVector X0 = X[I];
-    NumericVector X1 = X[I+1];
-    NumericVector X2 = X[I+2];
-    NumericVector X3 = X[I+3];
-    
-    NumericVector X1X0 = X1 - X0;
-    NumericVector X2X0 = X2 - X0;
-    NumericVector X3X0 = X3 - X0;
-    
-    double xv1 = var(X1X0);
-    double xv2 = var(X2X0);
-    double xv3 = var(X3X0);
+    double xv1 = lagged_variance_c(X, 1, n-3);
+    double xv2 = lagged_variance_c(X, 2, n-3);
+    double xv3 = lagged_variance_c(X, 3, n-3);
     
     double rho = -(xv1 - 2 * xv2 + xv3) / (2 * xv1 - xv2);
     if (rho > rho_max) rho = rho_max;

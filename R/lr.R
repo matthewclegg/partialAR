@@ -503,14 +503,14 @@ par.joint.pvalue <- function (
         nlower <- max(nvals[nvals <= n])
         AJCVL <- AJCV[list(nlower, probust)]
         plower <- suppressWarnings(AJCVL[stat.rw <= C_R & stat.mr <= C_M, min(alpha)])
-        if (plower == Inf) plower <- 1
+        if (is.na(plower) || is.infinite(plower)) plower <- 1
     }
     
     if (any(nvals >= n)) {
         nupper <- min(nvals[nvals > n])
         AJCVU <- AJCV[list(nupper, probust)]
         pupper <- suppressWarnings(AJCVU[stat.rw <= C_R & stat.mr <= C_M, min(alpha)])
-        if (pupper == Inf) pupper <- 1
+        if (is.na(pupper) || is.infinite(pupper)) pupper <- 1
     } else {
         nupper <- n
         pupper <- plower
