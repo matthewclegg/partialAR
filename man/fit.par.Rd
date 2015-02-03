@@ -202,6 +202,7 @@ decision. USE AT YOUR OWN RISK!
     data(EuStockMarkets)   # European Stock Markets 1991-1998
     
     # Check for cointegration between German DAX and Swiss SMI
+    library(egcm)
     egcm(log(EuStockMarkets[,c("DAX", "SMI")]))
     
     # The series are not found to be cointegrated.

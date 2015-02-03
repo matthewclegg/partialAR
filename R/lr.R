@@ -475,25 +475,16 @@ par.joint.pvalue <- function (
     # statistics (stat.rw, stat.mr)
 
     ar1test <- match.arg(ar1test)
-    C_R <- NULL # Make R CMD check happy
-    C_M <- NULL # Make R CMD check happy
-    alpha <- NULL # Make R CMD check happy
 
     if (!exists("PAR.JOINT.CRITICAL.VALUES")) stop ("Could not find table of critical values")
-#    if (!exists("PAR.JOINT.CRITICAL.VALUES.DT") ||
-#      is.null(PAR.JOINT.CRITICAL.VALUES.DT)) {
-#        PAR.JOINT.CRITICAL.VALUES.DT <<- as.data.table(PAR.JOINT.CRITICAL.VALUES)
-#        PAR.JOINT.CRITICAL.VALUES.KPSS.DT <<- as.data.table(PAR.JOINT.CRITICAL.VALUES.KPSS)        
-#    }
     
     if (ar1test == "lr") {
-        AJCV <- PAR.JOINT.CRITICAL.VALUES.DT
+        AJCV <- PAR.JOINT.CRITICAL.VALUES
     } else {
-        AJCV <- PAR.JOINT.CRITICAL.VALUES.KPSS.DT
+        AJCV <- PAR.JOINT.CRITICAL.VALUES.KPSS
     }
 
-    setkey(AJCV, n, robust)
-    nvals <- unique(AJCV[,n])
+    nvals <- unique(AJCV[,"n"])
     probust <- if (robust) 1 else 0
     if (!any(nvals <= n)) {
         warning("Sample size too small (", n, ") to provide accurate p-value")
@@ -501,16 +492,28 @@ par.joint.pvalue <- function (
         plower <- 1
     } else {
         nlower <- max(nvals[nvals <= n])
-        AJCVL <- AJCV[list(nlower, probust)]
-        plower <- suppressWarnings(AJCVL[stat.rw <= C_R & stat.mr <= C_M, min(alpha)])
-        if (is.na(plower) || is.infinite(plower)) plower <- 1
+        lower.matches <- (AJCV[,"n"] == nlower) & 
+            (AJCV[,"robust"] == probust) &
+            (stat.rw <= AJCV[,"C_R"]) &
+            (stat.mr <= AJCV[,"C_M"])
+        if (!any(lower.matches)) {
+            plower <- 1
+        } else {
+            plower <- min(AJCV[lower.matches,"alpha"])
+        }
     }
     
     if (any(nvals >= n)) {
         nupper <- min(nvals[nvals > n])
-        AJCVU <- AJCV[list(nupper, probust)]
-        pupper <- suppressWarnings(AJCVU[stat.rw <= C_R & stat.mr <= C_M, min(alpha)])
-        if (is.na(pupper) || is.infinite(pupper)) pupper <- 1
+        upper.matches <- (AJCV[,"n"] == nlower) & 
+            (AJCV[,"robust"] == probust) &
+            (stat.rw <= AJCV[,"C_R"]) &
+            (stat.mr <= AJCV[,"C_M"])
+        if (!any(upper.matches)) {
+            pupper <- 1
+        } else {
+            pupper <- min(AJCV[upper.matches,"alpha"])
+        }
     } else {
         nupper <- n
         pupper <- plower

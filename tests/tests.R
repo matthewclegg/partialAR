@@ -588,6 +588,10 @@ test_lr2 <- function(fast_only=FALSE) {
     test("partialAR:::par.joint.pvalue(-3,-0.1,500, robust=TRUE) > 0.05", TRUE)
     test("partialAR:::par.joint.pvalue(-5,-2,500, ar1test='kpss') < 0.05", TRUE)
     test("partialAR:::par.joint.pvalue(-3,-1,500, ar1test='kpss') > 0.05", TRUE)
+    test("partialAR:::par.joint.pvalue(-4,-0.5,50000)", 0.03)
+    test("partialAR:::par.joint.pvalue(-4,-0.5,50)", 0.10)
+    test("partialAR:::par.joint.pvalue(4,-0.5,50)", 1)
+    test("partialAR:::par.joint.pvalue(-4,-0.5,49)", 1)
 
     test("partialAR:::test.par.nullrw(data.L)$p.value < 0.05", TRUE)
     test("partialAR:::test.par.nullrw(data.IBM)$p.value > 0.05", TRUE)
@@ -890,6 +894,8 @@ test_fit <- function (fast_only=FALSE) {
 
 test_par <- function (fast_only=FALSE) {
     # Comprehensive unit testing for PAR package
+
+    options(warn=1)
     
     test_cfit(fast_only)
     test_lr(fast_only)

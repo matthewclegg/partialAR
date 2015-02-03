@@ -76,6 +76,7 @@ decision. USE AT YOUR OWN RISK!
     data(EuStockMarkets)   # European Stock Markets 1991-1998
     
     # Check for cointegration between German DAX and Swiss SMI
+    library(egcm)
     egcm(log(EuStockMarkets[,c("DAX", "SMI")]))
     
     # The series are not found to be cointegrated.
@@ -103,7 +104,6 @@ decision. USE AT YOUR OWN RISK!
     PEP <- getYahooData("PEP", 20140101, 20141231)$Close
     
     # Check whether they were cointegrated
-    library(egcm)
     egcm(KO,PEP)
     
     # It turns out that they are not cointegrated.  Perhaps a better

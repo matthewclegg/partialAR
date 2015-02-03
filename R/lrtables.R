@@ -27,8 +27,8 @@
 # if (!exists("PAR.SAMPLES.DT")) PAR.SAMPLES.DT <- NULL
 if (!exists("PAR.POWER.SAMPLES")) PAR.POWER.SAMPLES <- NULL
 if (!exists("PAR.POWER.PVMR.SAMPLES")) PAR.POWER.PVMR.SAMPLES <- NULL
-if (!exists("PAR.JOINT.CRITICAL.VALUES.DT")) PAR.JOINT.CRITICAL.VALUES.DT <- NULL
-if (!exists("PAR.JOINT.CRITICAL.VALUES.KPSS.DT")) PAR.JOINT.CRITICAL.VALUES.KPSS.DT <- NULL
+# if (!exists("PAR.JOINT.CRITICAL.VALUES.DT")) PAR.JOINT.CRITICAL.VALUES.DT <- NULL
+# if (!exists("PAR.JOINT.CRITICAL.VALUES.KPSS.DT")) PAR.JOINT.CRITICAL.VALUES.KPSS.DT <- NULL
   
 build_par_tables <- function (dir="tables", debug=FALSE, nrep=10000, rebuild_samples=TRUE) { 
     # Rebuilds all of the tables that are contained in this file.
@@ -107,16 +107,16 @@ load.lrtables <- function () {
     load_table("PAR.MRNULL.KPSS", "PAR.MRNULL.ROB.KPSS")
         
     load_table("PAR.JOINT.CRITICAL.VALUES")
-    if (exists("PAR.JOINT.CRITICAL.VALUES.DT", envir=asNamespace("partialAR"))) {
-        unlockBinding("PAR.JOINT.CRITICAL.VALUES.DT", asNamespace("partialAR"))
-    }
-    PAR.JOINT.CRITICAL.VALUES.DT <<- as.data.table(PAR.JOINT.CRITICAL.VALUES)
+#    if (exists("PAR.JOINT.CRITICAL.VALUES.DT", envir=asNamespace("partialAR"))) {
+#        unlockBinding("PAR.JOINT.CRITICAL.VALUES.DT", asNamespace("partialAR"))
+#    }
+#    PAR.JOINT.CRITICAL.VALUES.DT <<- as.data.table(PAR.JOINT.CRITICAL.VALUES)
     
     load_table("PAR.JOINT.CRITICAL.VALUES.KPSS")
-    if (exists("PAR.JOINT.CRITICAL.VALUES.KPSS.DT", envir=asNamespace("partialAR"))) {
-        unlockBinding("PAR.JOINT.CRITICAL.VALUES.KPSS.DT", asNamespace("partialAR"))
-    }
-    PAR.JOINT.CRITICAL.VALUES.KPSS.DT <<- as.data.table(PAR.JOINT.CRITICAL.VALUES.KPSS)
+#    if (exists("PAR.JOINT.CRITICAL.VALUES.KPSS.DT", envir=asNamespace("partialAR"))) {
+#        unlockBinding("PAR.JOINT.CRITICAL.VALUES.KPSS.DT", asNamespace("partialAR"))
+#    }
+#    PAR.JOINT.CRITICAL.VALUES.KPSS.DT <<- as.data.table(PAR.JOINT.CRITICAL.VALUES.KPSS)
     
 }
 
@@ -132,9 +132,9 @@ dump.lrtables <- function(filename="lrdata.R") {
     cat("\n\n", file=filename, append=TRUE)
 #    cat("PAR.SAMPLES.DT <- data.table(PAR.SAMPLES)\n", 
 #        file = filename, append=TRUE)
-    cat("PAR.JOINT.CRITICAL.VALUES.DT <- data.table(PAR.JOINT.CRITICAL.VALUES)\n", 
+    cat("# PAR.JOINT.CRITICAL.VALUES.DT <- data.table(PAR.JOINT.CRITICAL.VALUES)\n", 
         file = filename, append=TRUE)
-    cat("PAR.JOINT.CRITICAL.VALUES.KPSS.DT <- data.table(PAR.JOINT.CRITICAL.VALUES.KPSS)\n", 
+    cat("# PAR.JOINT.CRITICAL.VALUES.KPSS.DT <- data.table(PAR.JOINT.CRITICAL.VALUES.KPSS)\n", 
         file = filename, append=TRUE)
 
 }
