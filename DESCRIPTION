@@ -1,15 +1,16 @@
 Package: partialAR
 Type: Package
 Title: Partial Autoregression
-Version: 1.0.5
+Version: 1.0.6
 Date: 2015-01-12
 Authors@R: c(person("Matthew", "Clegg", role=c("aut","cre","cph"),
                     email="matthewcleggphd@gmail.com"))
-Description: Fits time series models which consist of a sum of a permanent and a transient component.  
+Description: A time series is said to be partially autoregressive if it can be
+represented as a sum of a random walk and an autoregressive sequence without unit roots.
+This package fits partially autoregressive time series, where the autoregressive 
+component is AR(1).  This may be of use in modeling certain financial time series.
 License: GPL-2 | GPL-3
 Imports: Rcpp (>= 0.11.2), zoo, parallel, ggplot2, grid, MASS, tseries,
         data.table, FKF, urca, plot3D
 Suggests: egcm, TTR
 LinkingTo: Rcpp
-
-
