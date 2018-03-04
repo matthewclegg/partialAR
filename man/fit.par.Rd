@@ -11,7 +11,7 @@ fit.par(Y,
   robust = FALSE, 
   model = c("par", "ar1", "rw"), 
   lambda = 0, 
-  opt_method = c("css", "fkf", "ss"), 
+  opt_method = c("css", "kfas", "ss"), 
   rho.max = 1, 
   nu = par.nu.default())
 }
@@ -43,7 +43,7 @@ Specifies the Kalman filter that will be used for optimization:
 \itemize{
 \item "ss" Steady-state Kalman filter
 \item "css" Steady-state Kalman filter coded in C++
-\item "fkf" Kalman filter implementation of the FKF package
+\item "kfas" Kalman filter implementation of the KFAS package
 }
 Default: \code{css}
 }
@@ -97,9 +97,9 @@ Kalman filter representation of the model.  When \code{opt_method} is
 \code{"ss"} or \code{"css"}, a steady-state Kalman filter is used.
 These two methods should give the same result, although \code{"css"} is
 to be preferred because the implementation is much faster.  When \code{opt_method}
-is \code{"fkf"}, the Fast Kalman Filter package \code{\link{fkf}} is used.
+is \code{"kfas"}, the KFAS Kalman Filter package \code{\link{KFAS}} is used.
 Because the Kalman gain matrix takes some time to converge to its steady state
-value, the \code{"fkf"} implementation will yield values that are close to
+value, the \code{"kfas"} implementation will yield values that are close to
 but not the same as those of \code{"ss"} and \code{"css"}.
 
 This routine prints the model that is found.  

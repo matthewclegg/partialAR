@@ -1,9 +1,9 @@
-useDynLib(partialAR)
+useDynLib(partialAR, .registration=TRUE)
 #exportPattern("^[[:alpha:]]+")
 
 importFrom(Rcpp, evalCpp)
 importFrom(graphics, plot)
-import("zoo","parallel","MASS","tseries","data.table","FKF","urca","plot3D")
+import("zoo","parallel","MASS","tseries","data.table","KFAS","urca","plot3D")
 importFrom(ggplot2,Facet)
 importFrom(ggplot2,aes)
 importFrom(ggplot2,facet_grid)
@@ -27,7 +27,7 @@ importFrom(grid,pushViewport)
 importFrom(grid,unit)
 importFrom(grid,viewport)
 importFrom("methods", "is")
-importFrom("stats", "approx", "median", "nlm", "optim", "optimize",
+importFrom("stats", "approx", "logLik", "median", "nlm", "optim", "optimize",
            "qchisq", "quantile", "rnorm", "rt", "sd", "var")
 importFrom("utils", "read.table", "write.table")
 

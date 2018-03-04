@@ -173,8 +173,8 @@ fit.par.both <- function (Y,    # The sequence to which a PAR model is to be fit
   lambda=0,                # A penalty to be applied to the random walk variance, 
                            # intended to drive the solution towards one with the 
                            # minimum random walk variance.
-  opt_method=c("css", "fkf", "ss"), # Optimization method to be used.
-                           # fkf = Fast Kalman filter
+  opt_method=c("css", "kfas", "ss"), # Optimization method to be used.
+                           # kfas = KFAS Kalman filter implementation
                            # ss = Steady State Kalman filter
                            # css = C-coded steady state Kalman filter
   rho.max = 1,            # An upper bound to be applied to the estimate
@@ -213,7 +213,7 @@ fit.par.both <- function (Y,    # The sequence to which a PAR model is to be fit
         ll_calc_method <- switch(opt_method,
             ss = "sst",
             css = "csst",
-            fkf = stop("robust estimation not implemented for opt_method = fkf")
+            kfas = stop("robust estimation not implemented for opt_method = kfas")
         )
     } else {
         ll_calc_method <- opt_method
@@ -321,8 +321,8 @@ fit.par.both <- function (Y,    # The sequence to which a PAR model is to be fit
 
 fit.par.mr <- function (Y, # The sequence to which a PAR model is to be fit
   robust=FALSE,            # If TRUE, robust estimations are performed                  
-  opt_method=c("css","fkf", "ss"), # Optimization method to be used.
-                           # fkf = Fast Kalman filter
+  opt_method=c("css","kfas", "ss"), # Optimization method to be used.
+                           # kfas = KFAS Kalman filter implementation
                            # ss = Steady State Kalman filter
                            # css = C-coded steady state Kalman filter
   rho.max = 1,             # An upper bound to be applied to the estimate
@@ -357,7 +357,7 @@ fit.par.mr <- function (Y, # The sequence to which a PAR model is to be fit
         ll_calc_method <- switch(opt_method,
             ss = "sst",
             css = "csst",
-            fkf = stop("robust estimation not implemented for opt_method = fkf")
+            kfas = stop("robust estimation not implemented for opt_method = kfas")
         )
     } else {
         ll_calc_method <- opt_method
@@ -450,8 +450,8 @@ fit.par.mr <- function (Y, # The sequence to which a PAR model is to be fit
 
 fit.par.rw <- function (Y, # The sequence to which a PAR model is to be fit
   robust=FALSE,            # If TRUE, robust estimations are performed                  
-  opt_method=c("css", "fkf", "ss"), # Optimization method to be used.
-                           # fkf = Fast Kalman filter
+  opt_method=c("css", "kfas", "ss"), # Optimization method to be used.
+                           # kfas = KFAS Kalman filter
                            # ss = Steady State Kalman filter
                            # css = C-coded steady state Kalman filter
   nu=par.nu.default()      # If robust=TRUE, the degrees of freedom parameter                          
@@ -483,7 +483,7 @@ fit.par.rw <- function (Y, # The sequence to which a PAR model is to be fit
         ll_calc_method <- switch(opt_method,
             ss = "sst",
             css = "csst",
-            fkf = stop("robust estimation not implemented for opt_method = fkf")
+            kfas = stop("robust estimation not implemented for opt_method = kfas")
         )
     } else {
         ll_calc_method <- opt_method
@@ -529,8 +529,8 @@ fit.par <- function (Y,    # The sequence to which a PAR model is to be fit
   lambda=0,                # A penalty to be applied to the random walk variance, 
                            # intended to drive the solution towards one with the 
                            # minimum random walk variance.
-  opt_method=c("css", "fkf", "ss"), # Optimization method to be used.
-                           # fkf = Fast Kalman filter
+  opt_method=c("css", "kfas", "ss"), # Optimization method to be used.
+                           # kfas = KFAS Kalman filter method
                            # ss = Steady State Kalman filter
                            # css = C-coded steady state Kalman filter
   rho.max = 1,             # An upper bound to be applied to the estimate

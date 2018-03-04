@@ -486,17 +486,17 @@ test_cfit <- function (fast_only=FALSE) {
 
 
 test_lr <- function (fast_only=FALSE) {
-    test("partialAR:::loglik.par.fkf(numeric(),0,0,1,0,0)", NA_real_)
-    test("partialAR:::loglik.par.fkf(0,0,0,1,0,0)", 0.918938533205)
-    test("partialAR:::loglik.par.fkf(c(0,0,0),0,0,1,0,0)", 2.75681559961)
-    test("partialAR:::loglik.par.fkf(1,0,0,1,0,0)", 1.4189385332)
-    test("partialAR:::loglik.par.fkf(0,0,1,0,0,0)", 0.918938533205)
-    test("partialAR:::loglik.par.fkf(c(0,0,0),0,1,0,0,0)", 2.75681559961)
-    test("partialAR:::loglik.par.fkf(c(0,0,0),0.5,1,0,0,0)", 2.75681559961)
-    test("partialAR:::loglik.par.fkf(c(0,1,2),0,0,1,0,1)", 4.25681559961)
-    test("partialAR:::loglik.par.fkf(0.5,0.5,1,0,1,0)", 1.0439385332)  # Note difference
-    test("partialAR:::loglik.par.fkf(data.L, 0.8720, 0.3385, 0.1927)", 238.53374143)
-    test("partialAR:::loglik.par.fkf(data.IBM, 0.9764, 2.0136, 0.4719, 0, data.IBM[1])", 1077.02787353)
+    test("partialAR:::loglik.par.kfas(numeric(),0,0,1,0,0)", NA_real_)
+    test("partialAR:::loglik.par.kfas(0,0,0,1,0,0)", 0.918938533205)
+    test("partialAR:::loglik.par.kfas(c(0,0,0),0,0,1,0,0)", 2.75681559961)
+    test("partialAR:::loglik.par.kfas(1,0,0,1,0,0)", 1.4189385332)
+    test("partialAR:::loglik.par.kfas(0,0,1,0,0,0)", 0.918938533205)
+    test("partialAR:::loglik.par.kfas(c(0,0,0),0,1,0,0,0)", 2.75681559961)
+    test("partialAR:::loglik.par.kfas(c(0,0,0),0.5,1,0,0,0)", 2.75681559961)
+    test("partialAR:::loglik.par.kfas(c(0,1,2),0,0,1,0,1)", 4.25681559961)
+    test("partialAR:::loglik.par.kfas(0.5,0.5,1,0,1,0)", 1.0439385332)  # Note difference
+    test("partialAR:::loglik.par.kfas(data.L, 0.8720, 0.3385, 0.1927)", 238.53374143)
+    test("partialAR:::loglik.par.kfas(data.IBM, 0.9764, 2.0136, 0.4719, 0, data.IBM[1])", 1077.02787353)
 
     test("partialAR:::loglik.par.ss(numeric(),0,0,1,0,0)", NA_real_)
     test("partialAR:::loglik.par.ss(0,0,0,1,0,0)", 0.918938533205)
@@ -525,7 +525,7 @@ test_lr <- function (fast_only=FALSE) {
 
     test("partialAR:::loglik.par(data.L, 0.8720, 0.3385, 0.1927)", 238.533361432)
     test("partialAR:::loglik.par(data.L, 0.8720, 0.3385, 0.1927, calc_method=\"css\")", 238.533361432)
-    test("partialAR:::loglik.par(data.L, 0.8720, 0.3385, 0.1927, calc_method=\"fkf\")", 238.53374143)
+    test("partialAR:::loglik.par(data.L, 0.8720, 0.3385, 0.1927, calc_method=\"kfas\")", 238.53374143)
     test("partialAR:::loglik.par(data.L, 0.8720, 0.3385, 0.1927, calc_method=\"ss\")", 238.533361432)
     test("partialAR:::loglik.par(data.L, 0.8958, 0.2612, 0.1768, calc_method=\"sst\")", 229.807616531)
     test("partialAR:::loglik.par(data.L, 0.8958, 0.2612, 0.1768, calc_method=\"csst\")", 229.807616531)
@@ -553,9 +553,9 @@ test.likelihood_ratio.par <- function (fast_only=FALSE) {
     test("partialAR:::likelihood_ratio.par(data.L, null_model='ar1', opt_method='css')", -4.44824693057)
     test("partialAR:::likelihood_ratio.par(data.L, null_model='ar1', robust=TRUE, opt_method='css')", -2.6480522184)
 
-    if (!fast_only) test("partialAR:::likelihood_ratio.par(data.L, opt_method='fkf')", -4.59676088358)
-    if (!fast_only) test("partialAR:::likelihood_ratio.par(data.L, null_model='rw', opt_method='fkf')", -4.59676088358)
-    if (!fast_only) test("partialAR:::likelihood_ratio.par(data.L, null_model='ar1', opt_method='fkf')", -4.5967605347)
+    if (!fast_only) test("partialAR:::likelihood_ratio.par(data.L, opt_method='kfas')", -4.59676088358)
+    if (!fast_only) test("partialAR:::likelihood_ratio.par(data.L, null_model='rw', opt_method='kfas')", -4.59676088358)
+    if (!fast_only) test("partialAR:::likelihood_ratio.par(data.L, null_model='ar1', opt_method='kfas')", -4.5967605347)
 
     SAMPLES <- partialAR:::sample.likelihood_ratio.par(nrep=10, use.multicore=FALSE)
     test("nrow(SAMPLES)", 10)
@@ -659,11 +659,11 @@ test_fit.par.both <- function (fast_only=FALSE) {
         structure(c(0.0493755130952366, 0.0306037545403534, 0.0507506043059735, 
         NA, 0.382843915239426), .Names = c("rho.se", "sigma_M.se", "sigma_R.se", 
         "M0.se", "R0.se")) )
-    if (!fast_only) test("partialAR:::fit.par.both(data.L, opt_method='fkf')$par", 
+    if (!fast_only) test("partialAR:::fit.par.both(data.L, opt_method='kfas')$par", 
         structure(c(0.873239025413773, 0.334187559078876, 0.187013759524079, 
         0, 37.8228485852872), .Names = c("rho", "sigma_M", "sigma_R", 
         "M0", "R0")) )
-    if (!fast_only) test("partialAR:::fit.par.both(data.L, opt_method='fkf')$stderr",
+    if (!fast_only) test("partialAR:::fit.par.both(data.L, opt_method='kfas')$stderr",
         structure(c(0.0480869790579741, 0.0299959210912542, 0.0482633848885082, 
         NA, 0.366440477748884), .Names = c("rho.se", "sigma_M.se", "sigma_R.se", 
         "M0.se", "R0.se")) )
@@ -709,10 +709,10 @@ test_fit.par.mr <- function (fast_only=FALSE) {
         structure(c(1.55086108092093e-05, 0.0123907243901383, NA, NA, 
         0.392621124942204), .Names = c("rho.se", "sigma_M.se", "sigma_R.se", 
         "M0.se", "R0.se")) )
-    if (!fast_only) test("partialAR:::fit.par.mr(data.L, opt_method='fkf')$par", 
+    if (!fast_only) test("partialAR:::fit.par.mr(data.L, opt_method='kfas')$par", 
         structure(c(1, 0.392621113047498, 0, 0, 37.8517816705312), .Names = c("rho", 
         "sigma_M", "sigma_R", "M0", "R0")) )
-    if (!fast_only) test("partialAR:::fit.par.mr(data.L, opt_method='fkf')$stderr",
+    if (!fast_only) test("partialAR:::fit.par.mr(data.L, opt_method='kfas')$stderr",
         structure(c(1.55086108092093e-05, 0.0123907243901654, NA, NA, 
         0.392621124727183), .Names = c("rho.se", "sigma_M.se", "sigma_R.se", 
         "M0.se", "R0.se")) )
@@ -749,7 +749,7 @@ test_fit.par.rw <- function (fast_only=FALSE) {
     if (!fast_only) test("partialAR:::fit.par.rw(data.L, opt_method='ss')$par", 
         structure(c(0, 0, 0.392609091324016, 0, 37.8517816659277), .Names = c("rho", 
         "sigma_M", "sigma_R", "M0", "R0")) )
-    if (!fast_only) test("partialAR:::fit.par.rw(data.L, opt_method='fkf')$par", 
+    if (!fast_only) test("partialAR:::fit.par.rw(data.L, opt_method='kfas')$par", 
         structure(c(0, 0, 0.392609091324016, 0, 37.8517816659277), .Names = c("rho", 
         "sigma_M", "sigma_R", "M0", "R0")) )
     test("partialAR:::fit.par.rw(data.IBM)$par", 
@@ -779,7 +779,7 @@ test_fit.par <- function (fast_only=FALSE) {
         structure(c(0.0493755130952366, 0.0306037545403534, 0.0507506043059735, 
         NA, 0.382843915239426), .Names = c("rho.se", "sigma_M.se", "sigma_R.se", 
         "M0.se", "R0.se")) )
-    if (!fast_only) test("partialAR:::fit.par(data.L, opt_method='fkf')$par", 
+    if (!fast_only) test("partialAR:::fit.par(data.L, opt_method='kfas')$par", 
         structure(c(0.873239025413773, 0.334187559078876, 0.187013759524079, 
         0, 37.8228485852872), .Names = c("rho", "sigma_M", "sigma_R", 
         "M0", "R0")) )

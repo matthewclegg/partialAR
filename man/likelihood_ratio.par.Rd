@@ -9,7 +9,7 @@ The likelihood scores are computed for both models, and the log likelihood
 ratio is returned.}
 \usage{
 likelihood_ratio.par(X, robust = FALSE, null_model = c("rw", "ar1"), 
-  opt_method = c("css", "fkf", "ss"), nu = par.nu.default())
+  opt_method = c("css", "kfas", "ss"), nu = par.nu.default())
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -27,7 +27,7 @@ likelihood_ratio.par(X, robust = FALSE, null_model = c("rw", "ar1"),
 \item \code{"ss"} Steady-state Kalman filter with normally distributed errors
 \item \code{"css"} Steady-state Kalman filter with normally distributed errors,
   coded in C++
-\item \code{"fkf"} Traditional Kalman filter of the \code{\link{fkf}} package
+\item \code{"kfas"} Traditional Kalman filter of the \code{\link{KFAS}} package
 }
 Default: \code{"css"}}
   \item{nu}{If \code{robust} is \code{TRUE}, this specifies

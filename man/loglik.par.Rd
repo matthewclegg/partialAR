@@ -8,7 +8,7 @@ Negative log likelihood of a partially autoregressive fit
 }
 \usage{
 loglik.par(Y, rho, sigma_M, sigma_R, M0 = 0, R0 = Y[1], 
-  calc_method = c("css", "fkf", "ss", "sst", "csst"), 
+  calc_method = c("css", "kfas", "ss", "sst", "csst"), 
   nu = par.nu.default())
 }
 %- maybe also 'usage' for other objects documented here.
@@ -25,7 +25,7 @@ autoregressive model is being fit.}
 \item \code{"ss"} Steady-state Kalman filter with normally distributed errors
 \item \code{"css"} Steady-state Kalman filter with normally distributed errors,
   coded in C++
-\item \code{"fkf"} Traditional Kalman filter of the \code{\link{fkf}} package
+\item \code{"kfas"} Traditional Kalman filter of the \code{\link{KFAS}} package
 \item \code{"sst"} Steady-state Kalman filter with t-distributed errors
 \item \code{"csst"} Steady-state Kalman filter with t-distributed errors,
   coded in C++

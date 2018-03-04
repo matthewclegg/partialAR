@@ -14,35 +14,30 @@
 #  A copy of the GNU General Public License is available at
 #  http://www.r-project.org/Licenses/
 
-loglik.par.fkf <- function (Y, rho, sigma_M, sigma_R, M0=0, R0=Y[1]) {
-    # Given a sequence Y and a parameterization (rho, sigma_M, sigma_R) of an
-    # associated PAR process, calculates the negative log likelihood that
-    # Y would be observed under these process parameters.  
-
-    if (length(Y) < 1) return(NA_real_)
-    if (length(dim(Y)) > 0) Y <- Y[,1]
-    Y <- coredata(Y)
-
-    M0 <- as.numeric(M0)
-    R0 <- as.numeric(R0)
-    
-    a0 <- c(M0, R0)
-    dt <- matrix(0, 2, 1)
-    ct <- matrix(0, 1, 1)
-    Zt <- matrix(c(1, 1), 1, 2)
-    GGt <- matrix(0, 1, 1)
-    P0 <- matrix(c(sigma_M^2, 0, 0, sigma_R^2), 2, 2)
-    Tt <- matrix(c(rho, 0, 0, 1), 2, 2)
-    HHt <- matrix(c(sigma_M^2, 0, 0,sigma_R^2), 2, 2)
-
-    sp <- list(a0 = a0, P0 = P0, ct = ct, dt = dt, Zt = Zt, Tt = Tt, 
-            GGt = GGt, HHt=HHt)
-    
-    ans <- fkf(a0 = sp$a0, P0 = sp$P0, dt = sp$dt, ct = sp$ct, Tt = sp$Tt,
-           Zt = sp$Zt, HHt = sp$HHt, GGt = sp$GGt, yt = rbind(Y))
-    
-#    cat("Kalman gain = ", ans$Kt, "\n")         
-    -ans$logLik 
+loglik.par.kfas <- function (Y, rho, sigma_M, sigma_R, M0=0, R0=Y[1]) {
+  # Given a sequence Y and a parameterization (rho, sigma_M, sigma_R) of an
+  # associated PAR process, calculates the negative log likelihood that
+  # Y would be observed under these process parameters.  
+  
+  if (length(Y) < 1) return(NA_real_)
+  if (length(dim(Y)) > 0) Y <- Y[,1]
+  Y <- zoo::coredata(Y)
+  
+  Zt <- matrix(c(1, 1), 1, 2)
+  Ht <- matrix(c(0), 1, 1)
+  Tt <- matrix(c(rho, 0, 0, 1), 2, 2, byrow = TRUE)
+  Rt <- matrix(c(1, 0, 0, 1), ncol=2, nrow=2, byrow = TRUE)
+  a1 <- matrix(c(M0, R0), 2, 1)
+  Qt <- matrix(c(sigma_M^2, 0, 0 , sigma_R^2), 2, 2)
+  P1 <- matrix(c(sigma_M^2, 0, 0, sigma_R^2), 2, 2,byrow = TRUE)
+  P1inf<-matrix(c(0, 0, 0, 0), 2, 2,byrow = TRUE)
+  model_par<-KFAS::SSModel(Y ~ -1 + SSMcustom(Z = Zt, T = Tt, Q = Qt, 
+                                              a1 = a1, P1 = P1,
+                                              P1inf = P1inf), H = Ht)
+  
+  res<- (-1)*logLik(model_par, check.model = FALSE, convtol = 1e-08)
+  return(res)
+  
 }
 
 loglik.par.ss <- function (Y, rho, sigma_M, sigma_R, M0=0, R0=Y[1]) {
@@ -152,12 +147,12 @@ loglik.par.ss.t <- function (Y, rho, sigma_M, sigma_R, M0=0, R0=Y[1], nu=par.nu.
 }
 
 loglik.par <- function (Y, rho, sigma_M, sigma_R, M0=0, R0=Y[1], 
-    calc_method=c("css", "fkf", "ss", "sst", "csst"), nu=par.nu.default()) {
+    calc_method=c("css", "kfas", "ss", "sst", "csst"), nu=par.nu.default()) {
     # Given a sequence Y and a parameterization (rho, sigma_M, sigma_R) of an
     # associated PAR process, calculates the negative log likelihood that
     # Y would be observed under these process parameters.  The method used
     # for calculating the log likelihood is determined by "method":
-    #   fkf:  Uses the Fast Kalman Filter (fkf) package
+    #   kfas: Uses the KFAS Kalman Filter package
     #   ss:   Uses a steady state Kalman filter
     #   css:  Uses a steady state Kalman filter coded in C
     #   sst:  Uses a robust steady state Kalman filter, where the
@@ -165,7 +160,7 @@ loglik.par <- function (Y, rho, sigma_M, sigma_R, M0=0, R0=Y[1],
     #   csst: Uses a robust steady state Kalman filter coded in C
     
     switch(match.arg(calc_method),
-      fkf=loglik.par.fkf(Y, rho, sigma_M, sigma_R, M0, R0),
+      kfas=loglik.par.kfas(Y, rho, sigma_M, sigma_R, M0, R0),
       ss=loglik.par.ss(Y, rho, sigma_M, sigma_R, M0, R0),
       css=loglik_par_c(Y, rho, sigma_M, sigma_R, M0, R0),
       sst=loglik.par.ss.t(Y, rho, sigma_M, sigma_R, M0, R0, nu),
@@ -179,17 +174,17 @@ likelihood_ratio.par <- function (X, # The series which is being fit
                              # rw = null model estimates sigma_R, assuming rho = sigma_M = 0.
                              #      This is the default.
                              # ar1 = null model estimates rho and sigma_M, assuming sigma_R = 0.
-    opt_method=c("css", "fkf", "ss"),  
+    opt_method=c("css", "kfas", "ss"),  
                              # Method to be used for calculating the log-likelihoods                         
                              #   css:  Uses a steady state Kalman filter coded in C
-                             #   fkf:  Uses the Fast Kalman Filter (fkf) package
+                             #   kfas:  Uses KFAS Fast Kalman Filter package
                              #   ss:   Uses a steady state Kalman filter
     nu=par.nu.default()      # If robust is TRUE, the degrees of freedom parameter                          
 ) {
     null_model <- match.arg(null_model)
     opt_method <- match.arg(opt_method)
 
-    if (robust && opt_method == "fkf") stop("robust estimation not implemented for opt_method = fkf")
+    if (robust && opt_method == "kfas") stop("robust estimation not implemented for opt_method = kfas")
     f.alt <- fit.par(X, robust=robust, opt_method=opt_method, nu=nu)
     f.null <- fit.par(X, robust=robust, model=null_model, opt_method=opt_method, nu=nu)
     f.alt$negloglik - f.null$negloglik   
