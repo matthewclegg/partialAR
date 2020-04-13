@@ -878,10 +878,10 @@ test_fit <- function (fast_only=FALSE) {
 
     print(partialAR:::fit.par(data.L))
     print(partialAR:::fit.par(data.IBM))
-    
+
     test("as.data.frame(partialAR:::fit.par(data.L))",
         structure(list(robust = FALSE, nu = 5, 
-            opt_method = structure(1L, .Label = "css", class = "factor"), 
+            opt_method = "css", 
             n = 502L, rho = 0.871991364792238, sigma_M = 0.338198849510798, 
             sigma_R = 0.192519577779812, M0 = 0, R0 = 37.8348806008997, 
             rho.se = 0.0493755130952366, sigma_M.se = 0.0306037545403534, 
