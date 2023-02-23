@@ -1,8 +1,8 @@
 Package: partialAR
 Type: Package
 Title: Partial Autoregression
-Version: 1.0.12
-Date: 2020-04-12
+Version: 1.0.13
+Date: 2023-02-23
 Authors@R: c(person("Matthew", "Clegg", role=c("aut","cre","cph"),
                     email="matthewcleggphd@gmail.com"))
 Description: A time series is said to be partially autoregressive if it can be represented as a sum of a random walk and an autoregressive sequence without unit roots. This package fits partially autoregressive time series, where the autoregressive  component is AR(1).  This may be of use in modeling certain financial time series.
